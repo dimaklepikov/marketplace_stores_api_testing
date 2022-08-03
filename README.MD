@@ -1,5 +1,5 @@
 # Тестовое задание на работу с API от [QA/Testers](https://qatesters.ru/)
-Привет! Приложение тестирует функциональность API-эндпоинтов данного [Store]((https://github.com/berpress/flask-restful-api).
+Привет! Приложение тестирует функциональность API-эндпоинтов данного [Store](https://github.com/berpress/flask-restful-api).
 
 [Документация](https://app.swaggerhub.com/apis-docs/berpress/flask-rest-api/1.0.0#/Item)
 

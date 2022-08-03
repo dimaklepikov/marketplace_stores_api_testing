@@ -1,5 +1,6 @@
 # Тестовое задание на работу с API от [QA/Testers](https://qatesters.ru/)
-Привет! Приложение тестирует функциональность API-эндпоинтов данного [Store](stores-tests-api.herokuapp.com) API.
+Привет! Приложение тестирует функциональность API-эндпоинтов данного [Store]((https://github.com/berpress/flask-restful-api).
+
 [Документация](https://app.swaggerhub.com/apis-docs/berpress/flask-rest-api/1.0.0#/Item)
 
 ## Как запустить?
@@ -12,7 +13,7 @@ conda create -n pytest_api python=3.9
 ```sh
 pip install -r requirements.txt
 ```
-4. Запустите тесты - выберете тэг api, укажите base url, дайте имя файлу с html отчетом:)
+4. Запустите тесты - выберbте тэг api, укажите base url, дайте имя файлу с html отчетом:)
 ```sh
 pytest -m api --url https://stores-tests-api.herokuapp.com --html=report.html
 ``` 
@@ -22,4 +23,3 @@ pytest -m api --url https://stores-tests-api.herokuapp.com --html=report.html
 2. **Кастомная фикстура, позволяющая задавать base url через CLI**
 3. **Тесты запускаются по кастомному тегу 'api'**
 4. **Генерируется отчет в виде html-файла**
-

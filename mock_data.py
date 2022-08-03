@@ -9,5 +9,5 @@ def fake_register_body():
         'password': fake.password()
     }
 
-def fake_store_name():
+def fake_store_number():
     return random.random()

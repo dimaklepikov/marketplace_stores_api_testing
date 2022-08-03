@@ -40,9 +40,9 @@ class TestApi:
     @pytest.mark.api
     def test_authentification(self, base_url):
         response = User(url=base_url).authentificate_user(body=data.body)
+        data.token = response.json().get('access_token')
 
         assert response.status_code == 200
-        data.token = response.json().get('access_token')
         assert data.token
         
 

@@ -1,7 +1,8 @@
 import pytest
 
-from api import User, Store
-from mock_data import fake_register_body, fake_store_number
+from api import Item, User, Store
+from mock_data import FakeData
+from .constants import Headers
 
 
 class MockData(object):
@@ -11,22 +12,23 @@ class MockData(object):
         return cls.instance
 
     def __init__(self):
-        self.body = fake_register_body()
-        self.store_number = fake_store_number()
+        self.register_body = FakeData.fake_register_body()
+        self.store_number = FakeData.fake_store_number()
         self.token = None
+        self.store_id = None
 
 data = MockData()
 
 class TestApi:
 
-    @pytest.mark.api
+    @pytest.mark.api1
     def test_registration(self, base_url):
         response = User(url=base_url).register_user(body=data.body)
-
+        
+        print(response.headers)
         assert response.status_code == 201
         assert response.json().get('message') == 'User created successfully.'
         assert response.json().get('uuid')
-
 
     @pytest.mark.api
     def test_existing_register(self, base_url):
@@ -37,10 +39,11 @@ class TestApi:
         assert response.json().get('uuid')
 
 
-    @pytest.mark.api
+    @pytest.mark.api1
     def test_authentification(self, base_url):
-        response = User(url=base_url).authentificate_user(body=data.body)
+        response = User(url=base_url).authentificate(body=data.body)
         data.token = response.json().get('access_token')
+        print(response.headers)
 
         assert response.status_code == 200
         assert data.token
@@ -48,7 +51,7 @@ class TestApi:
 
     @pytest.mark.api
     def test_store_creation(self, base_url):
-        response = Store(url=base_url).create_store(name=data.store_number, auth_key=data.token)
+        response = Store(url=base_url).create(name=data.store_number, auth_key=data.token)
 
         assert response.status_code == 201        
         assert response.json().get('name') == str(data.store_number)
@@ -57,16 +60,29 @@ class TestApi:
 
     @pytest.mark.api
     def test_getting_store(self, base_url):
-        response = Store(url=base_url).get_store(name=data.store_number, auth_key=data.token)
+        response = Store(url=base_url).get_(name=data.store_number, auth_key=data.token)
 
         assert response.status_code == 200       
         assert response.json().get('name') == str(data.store_number)
-        assert response.json().get('uuid')
+        data.store_id = response.json().get('uuid')
+        assert data.store_id
     
 
     @pytest.mark.api
     def test_existing_store_creation(self, base_url):
-        response = Store(url=base_url).create_store(name=data.store_number, auth_key=data.token)
+        response = Store(url=base_url).create(name=data.store_number, auth_key=data.token)
 
         assert response.status_code == 400
         assert response.json().get('message') == f'''A store with name '{data.store_number}' already exists.'''
+        # TODO: CAssert response name and 
+    def test_create_store_item(self, base_url):
+        response = Item.create(
+            url=base_url, 
+            name=FakeData.fake_item_name(),
+            headers=Headers.auth_header(data.token),
+            body=FakeData.fake_create_item_body(self.store_id),
+            )
+        
+        assert response.status_code == 201
+        assert response.json().get('name') == 
+        

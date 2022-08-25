@@ -4,22 +4,32 @@ class User():
     def __init__(self, url):
         self.url = url
 
-    def register_user(self, body):
+    def register(self, body):
         return requests.post(f'{self.url}/register', json=body) 
 
-    def authentificate_user(self, body):
+    def authentificate(self, body):
         return requests.post(f'{self.url}/auth', json=body)
     
-    def delete_user(self, user_id, auth_key):
-        return requests.delete(f'{self.url}/user_info/{user_id}', headers=auth_key)
+    def delete(self, user_id, headers):
+        return requests.delete(f'{self.url}/user_info/{user_id}', headers=headers)
 
 
 class Store():
     def __init__(self, url):
          self.url = url
 
-    def create_store(self, name, auth_key):
-        return requests.post(f'{self.url}/store/{name}', headers={'Authorization': f'JWT {auth_key}'})
+    def create(self, name, headers):
+        return requests.post(f'{self.url}/store/{name}', headers=headers)
 
-    def get_store(self, name, auth_key):
-        return requests.get(f'{self.url}/store/{name}', headers={'Authorization': f'JWT {auth_key}'})
+    def get(self, name, headers):
+        return requests.get(f'{self.url}/store/{name}', headers=headers)
+    
+class Item():
+    def __init__(self, url):
+         self.url = url
+         
+    def create(self, name, headers, body):
+        return requests.post(f'{self.url}/item/{name}', headers=headers, json=body)
+    
+    def get(self, name, autk_key):
+        pass

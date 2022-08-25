@@ -27,4 +27,3 @@ class FakeData:
         "description": fake.catch_phrase(),
         "image": fake.file_path()
         }
-    

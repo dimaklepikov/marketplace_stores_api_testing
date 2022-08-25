@@ -20,7 +20,7 @@ class FakeData:
     def fake_item_name():
         return fake.user_name()
     
-    def fake_create_item_body(store_id):
+    def fake_item_body(store_id):
         return {
         "price": fake.aba(),
         "store_id": store_id,

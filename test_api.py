@@ -1,12 +1,14 @@
-from urllib import response
 import pytest
+from jsonschema import validate
 
 from api import Item, User, Store
 from mock_data import FakeData
 from constants import Headers
+from schemas import UserSchema
 
-#TODO: 1)Add critical path test group as in 
-# 2) Validate json_chema 
+#TODO: 
+# 1)Add critical path test group 
+# 2) Add logging module to project
 # 3) Refactor code at MockData class
 # 4) Add requests wrapper
 class MockData(object):
@@ -22,7 +24,7 @@ class MockData(object):
         self.store_id = None
         self.item_id = None
         self.item_name = FakeData.fake_item_name()
-        self.item_body = FakeData.fake_create_item_body(self.store_id)
+        self.item_body = FakeData.fake_item_body(self.store_id)
 
 data = MockData()
 
@@ -30,16 +32,20 @@ class TestApi:
 
     @pytest.mark.api1
     def test_registration(self, base_url):
-        response = User(url=base_url).register(body=data.register_body)
+        response = User(url=base_url).register(
+            body=data.register_body
+            )
+        validate(instance=response.json(), schema=UserSchema.registration)
         
-        print(response.headers)
         assert response.status_code == 201
         assert response.json().get('message') == 'User created successfully.'
         assert response.json().get('uuid')
 
     @pytest.mark.api
     def test_existing_register(self, base_url):
-        response = User(url=base_url).register_user(body=data.register_body)
+        response = User(url=base_url).register(
+            body=data.register_body
+            )
 
         assert response.status_code == 400
         assert response.json().get('message') == 'A user with that username already exists'
@@ -48,9 +54,12 @@ class TestApi:
 
     @pytest.mark.api1
     def test_authentification(self, base_url):
-        response = User(url=base_url).authentificate(body=data.register_body)
+        response = User(url=base_url).authentificate(
+            body=data.register_body
+            )
+        validate(instance=response.json(), schema=UserSchema.authentication)
+        
         data.token = response.json().get('access_token')
-        print(response.headers)
 
         assert response.status_code == 200
         assert data.token
@@ -58,7 +67,10 @@ class TestApi:
 
     @pytest.mark.api
     def test_store_creation(self, base_url):
-        response = Store(url=base_url).create(name=data.store_number, auth_key=data.token)
+        response = Store(url=base_url).create(
+            name=data.store_number, 
+            auth_key=data.token,
+            )
 
         assert response.status_code == 201        
         assert response.json().get('name') == str(data.store_number)
@@ -67,7 +79,10 @@ class TestApi:
 
     @pytest.mark.api
     def test_getting_store(self, base_url):
-        response = Store(url=base_url).get_(name=data.store_number, auth_key=data.token)
+        response = Store(url=base_url).get(
+            name=data.store_number, 
+            auth_key=data.token
+            )
 
         assert response.status_code == 200       
         assert response.json().get('name') == str(data.store_number)
@@ -77,7 +92,10 @@ class TestApi:
 
     @pytest.mark.api
     def test_existing_store_creation(self, base_url):
-        response = Store(url=base_url).create(name=data.store_number, auth_key=data.token)
+        response = Store(url=base_url).create(
+            name=data.store_number, 
+            auth_key=data.token
+            )
 
         assert response.status_code == 400
         assert response.json().get('message') == f'''A store with name '{data.store_number}' already exists.'''
@@ -99,7 +117,7 @@ class TestApi:
     def test_get_store_item(self, base_url):
         response = Item(url=base_url).get(
             name=data.item_name,
-            headers=Headers.auth_header(data.token)
+            headers=Headers.auth_header(data.token),
         ) 
         
         assert response.status_code == 200

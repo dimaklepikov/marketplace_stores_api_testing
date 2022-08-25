@@ -31,5 +31,5 @@ class Item():
     def create(self, name, headers, body):
         return requests.post(f'{self.url}/item/{name}', headers=headers, json=body)
     
-    def get(self, name, autk_key):
-        pass
+    def get(self, name, headers):
+        return requests.get(f'{self.url}/item/{name}', headers=headers)

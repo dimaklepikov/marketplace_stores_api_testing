@@ -2,9 +2,11 @@ import pytest
 
 from api import Item, User, Store
 from mock_data import FakeData
-from .constants import Headers
+from constants import Headers
 
-
+#TODO: 1)Add critical path test group as in 
+# 2) Validate json_chema 
+# 3) Refactor code at MockData class
 class MockData(object):
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -16,6 +18,8 @@ class MockData(object):
         self.store_number = FakeData.fake_store_number()
         self.token = None
         self.store_id = None
+        self.item_name = FakeData.fake_item_name()
+        self.item_body = FakeData.fake_create_item_body(self.store_id)
 
 data = MockData()
 
@@ -23,7 +27,7 @@ class TestApi:
 
     @pytest.mark.api1
     def test_registration(self, base_url):
-        response = User(url=base_url).register_user(body=data.body)
+        response = User(url=base_url).register(body=data.register_body)
         
         print(response.headers)
         assert response.status_code == 201
@@ -32,7 +36,7 @@ class TestApi:
 
     @pytest.mark.api
     def test_existing_register(self, base_url):
-        response = User(url=base_url).register_user(body=data.body)
+        response = User(url=base_url).register_user(body=data.register_body)
 
         assert response.status_code == 400
         assert response.json().get('message') == 'A user with that username already exists'
@@ -41,7 +45,7 @@ class TestApi:
 
     @pytest.mark.api1
     def test_authentification(self, base_url):
-        response = User(url=base_url).authentificate(body=data.body)
+        response = User(url=base_url).authentificate(body=data.register_body)
         data.token = response.json().get('access_token')
         print(response.headers)
 
@@ -75,14 +79,15 @@ class TestApi:
         assert response.status_code == 400
         assert response.json().get('message') == f'''A store with name '{data.store_number}' already exists.'''
         # TODO: CAssert response name and 
+    
+    @pytest.mark.api1
     def test_create_store_item(self, base_url):
-        response = Item.create(
-            url=base_url, 
-            name=FakeData.fake_item_name(),
+        response = Item(url=base_url).create(
+            name=data.item_name,
             headers=Headers.auth_header(data.token),
-            body=FakeData.fake_create_item_body(self.store_id),
+            body=data.item_body,
             )
         
         assert response.status_code == 201
-        assert response.json().get('name') == 
-        
+        assert response.json().get('name') == data.item_name
+        assert response.json().get('image') == data.item_body.get('image')       

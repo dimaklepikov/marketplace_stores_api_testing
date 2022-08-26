@@ -35,6 +35,14 @@ class StoreSchema:
         },
         "required": ["message"]    
     }
+    
+    message = {
+        "type": "object",
+        "properties": {
+            "message": {"type": "string"},
+        },
+        "required": ["message"]          
+    }
 
 
 class ItemSchema:
@@ -48,4 +56,12 @@ class ItemSchema:
             "image": {"type": "string"},
         },
         "required": ["name", "price", "itemID", "description", "image"]         
+    }
+    
+    delete = {
+        "type": "object",
+        "properties": {
+            "message": {"type": "string"},
+        },
+        "required": ["message"]          
     }

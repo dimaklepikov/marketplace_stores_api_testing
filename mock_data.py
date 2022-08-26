@@ -5,7 +5,7 @@ fake = Faker()
 
 class FakeData:
     
-    
+
     def fake_register_body():
         return {
             'username': fake.user_name(),

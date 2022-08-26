@@ -1,3 +1,4 @@
+from urllib import response
 from jsonschema import validate
 import logging
 
@@ -49,7 +50,14 @@ class Store():
         validate(instance=response.json(), schema=schema)
         logger.info(response.text)
         
-        return ResponseModel(status=response.status_code, response=response.json())    
+        return ResponseModel(status=response.status_code, response=response.json())  
+    
+    def delete(self, name, headers, schema):
+        response = self.client.custom_request("DELETE", f'{self.url}/store/{name}', headers=headers)
+        validate(instance=response.json(), schema=schema)
+        logger.info(response.text)
+        
+        return ResponseModel(status=response.status_code, response=response.json())   
 class Item():
     def __init__(self, url):
         self.url = url
@@ -68,3 +76,10 @@ class Item():
         logger.info(response.text)
         
         return ResponseModel(status=response.status_code, response=response.json())
+    
+    def delete(self, name, headers, schema):
+        response = self.client.custom_request("DELETE", f'{self.url}/item/{name}', headers=headers)
+        validate(instance=response.json(), schema=schema)
+        logger.info(response.text)
+        
+        return ResponseModel(status=response.status_code, response=response.json())         

@@ -8,8 +8,8 @@ class FakeData:
 
     def fake_register_body():
         return {
-            'username': fake.user_name(),
-            'password': fake.password()
+            "username": fake.user_name(),
+            "password": fake.password()
         }
 
 
@@ -22,16 +22,16 @@ class FakeData:
     
     def fake_item_body(store_id):
         return {
-        "price": fake.aba(),
-        "store_id": store_id,
-        "description": fake.catch_phrase(),
-        "image": fake.file_path()
+            "price": fake.aba(),
+            "store_id": store_id,
+            "description": fake.catch_phrase(),
+            "image": fake.file_path()
         }
 
 
 class MockData(object):
     def __new__(cls):
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(MockData, cls).__new__(cls)
         return cls.instance
 

@@ -1,37 +1,23 @@
 import pytest
 
 from api import Item, User, Store
-from mock_data import FakeData
+from mock_data import MockData
 from constants import Headers
 from schemas import UserSchema, StoreSchema, ItemSchema
 
 
 
 #TODO: 
-# 1)Add critical path test group 
-# 3) Refactor code at MockData class
+# Add delete functions
 # 5) Add Allure report
 # 6) Add Gitlab CI auto run tests
-class MockData(object):
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(MockData, cls).__new__(cls)
-        return cls.instance
 
-    def __init__(self):
-        self.register_body = FakeData.fake_register_body()
-        self.store_number = FakeData.fake_store_number()
-        self.token = None
-        self.store_id = None
-        self.item_id = None
-        self.item_name = FakeData.fake_item_name()
-        self.item_body = FakeData.fake_item_body(self.store_id)
 
 data = MockData()
+@pytest.mark.critical_path
+class TestCriticalPath:
+    
 
-class TestApi:
-
-    @pytest.mark.api1
     def test_registration(self, base_url):
         response = User(url=base_url).register(
             body=data.register_body,
@@ -41,8 +27,8 @@ class TestApi:
         assert response.status_code == 201
         assert response.response.get('message') == 'User created successfully.'
         assert response.response.get('uuid')
-
-    @pytest.mark.api1
+        
+        
     def test_existing_register(self, base_url):
         response = User(url=base_url).register(
             body=data.register_body,
@@ -54,7 +40,6 @@ class TestApi:
         assert response.response.get('uuid')
 
 
-    @pytest.mark.api1
     def test_authentification(self, base_url):
         response = User(url=base_url).authentificate(
             body=data.register_body,
@@ -67,7 +52,6 @@ class TestApi:
         assert data.token
         
 
-    @pytest.mark.api1
     def test_store_creation(self, base_url):
         response = Store(url=base_url).create(
             name=data.store_number, 
@@ -79,8 +63,8 @@ class TestApi:
         assert response.response.get('name') == str(data.store_number)
         assert response.response.get('uuid')
 
-
-    @pytest.mark.api1
+      
+    @pytest.mark.critical_path
     def test_getting_store(self, base_url):
         response = Store(url=base_url).get(
             name=data.store_number, 
@@ -92,20 +76,8 @@ class TestApi:
         assert response.response.get('name') == str(data.store_number)
         data.store_id = response.response.get('uuid')
         assert data.store_id
-    
 
-    @pytest.mark.api1
-    def test_existing_store_creation(self, base_url):
-        response = Store(url=base_url).create(
-            name=data.store_number, 
-            headers=Headers.auth_header(data.token),
-            schema=StoreSchema.existing_store_cretion
-            )
 
-        assert response.status_code == 400
-        assert response.response.get('message') == f'''A store with name '{data.store_number}' already exists.'''
-    
-    @pytest.mark.api1
     def test_create_store_item(self, base_url):
         response = Item(url=base_url).create(
             name=data.item_name,
@@ -118,8 +90,8 @@ class TestApi:
         assert response.status_code == 201
         assert response.response.get('name') == data.item_name
         assert response.response.get('image') == data.item_body.get('image') 
-        
-    @pytest.mark.api1
+    
+    
     def test_get_store_item(self, base_url):
         response = Item(url=base_url).get(
             name=data.item_name,
@@ -131,3 +103,24 @@ class TestApi:
         assert response.response.get('name') == data.item_name
         assert response.response.get('price') == float(f'{data.item_body.get("price")}.0')
         assert response.response.get('item_ID') != data.item_id
+
+       
+    def test_create_existing_store_item(self, base_url):
+        pass
+    
+    
+    def test_delete_store_item(self, base_url):
+        pass
+    
+    
+    def test_get_deleted_store_item(self, base_url):
+        pass
+    
+    
+    def test_deleting_store(self, base_url):
+        pass
+
+    
+    def test_get_deleted_store(self, base_url):
+        pass
+    

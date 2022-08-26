@@ -27,3 +27,19 @@ class FakeData:
         "description": fake.catch_phrase(),
         "image": fake.file_path()
         }
+
+
+class MockData(object):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(MockData, cls).__new__(cls)
+        return cls.instance
+
+    def __init__(self):
+        self.register_body = FakeData.fake_register_body()
+        self.store_number = FakeData.fake_store_number()
+        self.token = None
+        self.store_id = None
+        self.item_id = None
+        self.item_name = FakeData.fake_item_name()
+        self.item_body = FakeData.fake_item_body(self.store_id)

@@ -75,7 +75,7 @@ pages:
 
   script:
     - mkdir public
-    - mv ./allure-report/* public
+    - mv ./allure_report/* public
 
   artifacts:
     paths:

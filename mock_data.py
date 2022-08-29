@@ -9,7 +9,7 @@ class FakeData:
     def fake_register_body():
         return {
             "username": fake.user_name(),
-            "password": fake.password()
+            "password": fake.password(),
         }
 
 
@@ -25,7 +25,7 @@ class FakeData:
             "price": fake.aba(),
             "store_id": store_id,
             "description": fake.catch_phrase(),
-            "image": fake.file_path()
+            "image": fake.file_path(),
         }
 
 

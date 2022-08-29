@@ -3,3 +3,5 @@ requests
 faker
 pytest-html
 jsonschema
+allure-pytest
+pytest-xdist

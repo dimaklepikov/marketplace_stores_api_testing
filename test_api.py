@@ -10,8 +10,6 @@ from schemas import UserSchema, StoreSchema, ItemSchema
 
 #TODO: 
 # Add Allure steps to each test case
-# 6) Add Gitlab CI auto run tests
-
 
 data = MockData()
 @pytest.mark.critical_path

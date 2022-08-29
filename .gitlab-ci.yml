@@ -17,7 +17,7 @@ docker_job:
     - pip install -r requirements.txt
 
   script:
-    - pytest --alluredir=./allure_results test_api.py
+    - pytest -m critical_path --url https://stores-tests-api.herokuapp.com -s  --alluredir=./allure_results
 
   allow_failure: true
 
@@ -81,4 +81,3 @@ pages:
       - public
   rules:
     - when: always
-  

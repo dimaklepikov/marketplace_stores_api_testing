@@ -15,6 +15,7 @@ docker_job:
 
   before_script:
     - pip install -r requirements.txt
+    - mkdir ./allure_results
 
   script:
     - pytest -m critical_path --url https://stores-tests-api.herokuapp.com -s  --alluredir=./allure_results

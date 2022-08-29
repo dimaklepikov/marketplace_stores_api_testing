@@ -25,7 +25,7 @@ docker_job:
   artifacts:
     when: always
     paths:
-      - ./allure-results
+      - ./allure_results
     expire_in: 1 day
 
 history_job:
@@ -41,14 +41,14 @@ history_job:
     - apk add unzip
     - unzip artifacts.zip
     - chmod -R 777 public
-    - cp -r ./public/history ./allure-results
+    - cp -r ./public/history ./allure_results
 
   allow_failure: true
 
   artifacts:
     when: always
     paths:
-      - ./allure-results
+      - ./allure_results
     expire_in: 1 day
 
 allure_job:
@@ -67,7 +67,7 @@ allure_job:
   artifacts:
     when: always
     paths:
-      - ./allure-results
+      - ./allure_results
     expire_in: 1 day
 
 pages:
@@ -75,7 +75,7 @@ pages:
 
   script:
     - mkdir public
-    - mv ./allure_report/* public
+    - mv ./allure_results/* public
 
   artifacts:
     paths:
